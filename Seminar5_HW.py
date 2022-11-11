@@ -3,18 +3,29 @@ import numpy as np
 import random
 
 
+def generates_domain_of_functions(min, max):
+    domain = []
+    number = min
+    while number <= max:
+        domain.append(number)
+        number += 0.1
+    return domain
+
+
 def non_convex_function(x):
-    return x**4 + x**3 - 2*x**2 - 2*x
+    return (x-1)*x*(x+1)
 
 
 def non_convex_function_first_derivative(x):
-    return 4*x**3 + 3*x**2 - 4*x - 2
+    return 3*x**2-1
 
 
 def non_convex_function_image(domain_maximum, domain_minimum):
     image = []
-    for x in range(domain_minimum, domain_maximum + 1):
-        image.append(non_convex_function(x))
+    number = domain_minimum
+    while number <= domain_maximum:
+        image.append(non_convex_function(number))
+        number += 0.1
     return image
 
 
@@ -28,8 +39,10 @@ def convex_function_first_derivative(x):
 
 def convex_function_image(domain_maximum, domain_minimum):
     image = []
-    for x in range(domain_minimum, domain_maximum+1):
-        image.append(convex_function(x))
+    number = domain_minimum
+    while number <= domain_maximum:
+        image.append(convex_function(number))
+        number += 0.1
     return image
 
 
@@ -53,32 +66,26 @@ def image_history(history, function):
 
 
 if __name__ == '__main__':
-
-    domain_of_function = [x for x in range(-500, 500)]
+    domain_of_function = generates_domain_of_functions(-100, 100)
     image_convex_function = convex_function_image(domain_of_function[-1], domain_of_function[0])
     image_non_convex_function = non_convex_function_image(domain_of_function[-1], domain_of_function[0])
-    intervals = ((-500, -400), (400, 500))
     figure, ((plt1, plt2), (plt3, plt4)) = plt.subplots(2, 2)
     figure.set_figwidth(20)
     figure.set_figheight(10)
 
     plt1.plot(domain_of_function, image_convex_function, color='black', linewidth='2')
-    interval = random.choice(intervals)
-    history, result = gradient_descent(random.choice(interval), convex_function_first_derivative, 0.1, 100)
+    history, result = gradient_descent(100, convex_function_first_derivative, 0.1, 100)
     plt1.plot(history, image_history(history, convex_function), color='green', linestyle='dashed', marker='o', markerfacecolor='brown', linewidth=2)
 
     plt2.plot(domain_of_function, image_convex_function, color='black', linewidth='2')
-    interval = random.choice(intervals)
-    history, result = gradient_descent(random.choice(interval), convex_function_first_derivative, 5, 100)
-    #plt2.plot(history, image_history(history, convex_function), color='red', linestyle='dashed', marker='o', markerfacecolor='yellow', linewidth=2)
+    history, result = gradient_descent(100, convex_function_first_derivative, 5, 100)
+    plt2.plot(history, image_history(history, convex_function), color='red', linestyle='dashed', marker='o', markerfacecolor='yellow', linewidth=2)
 
     plt3.plot(domain_of_function, image_convex_function, color='black', linewidth='2')
-    interval = random.choice(intervals)
-    history, result = gradient_descent(random.choice(interval), convex_function_first_derivative, 10, 100)
-    #plt3.plot(history, image_history(history, convex_function), color='red', linestyle='dashed', marker='o', markerfacecolor='yellow', linewidth=2)
+    history, result = gradient_descent(100, convex_function_first_derivative, 10, 100)
+    plt3.plot(history, image_history(history, convex_function), color='red', linestyle='dashed', marker='o', markerfacecolor='yellow', linewidth=2)
 
     plt4.plot(domain_of_function, image_non_convex_function, color='black', linewidth='2')
-    interval = random.choice(intervals)
-    history, result = gradient_descent(random.choice(interval), non_convex_function_first_derivative, 0.000001, 100)
-    #plt4.plot(history, image_history(history, non_convex_function), color='red', linestyle='dashed', marker='o', markerfacecolor='yellow', linewidth=2)
+    history, result = gradient_descent(100, non_convex_function_first_derivative, 0.002, 100)
+    plt4.plot(history, image_history(history, non_convex_function), color='red', linestyle='dashed', marker='o', markerfacecolor='yellow', linewidth=2)
     plt.show()
